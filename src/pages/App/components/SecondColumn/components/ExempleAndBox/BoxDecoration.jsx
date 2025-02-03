@@ -1,0 +1,181 @@
+import { width } from '@fortawesome/free-regular-svg-icons/faAddressBook'
+import { Button } from '../../../../../../components/button/button'
+import './index.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleLeft, faCircleRight } from '@fortawesome/free-regular-svg-icons'
+import { useEffect, useState } from 'react'
+import { getStamps } from '../../../../../../services/StampsAndBox/Stamps'
+import { Konva } from '../Konva/Konva'
+import { useStamps } from '../../../../../../contexts/StampsContext';
+import { getAllBoxs } from '../../../../../../services/StampsAndBox/Box'
+import { useBox } from '../../../../../../contexts/BoxContext'
+export const BoxDecoration = () => {
+    const [stamps, setStamps] = useState([])
+    const [box, setBox] = useState([])
+    const { setStampsKonva } = useStamps();
+    const { setBoxData } = useBox()
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndexBox, setCurrentIndexBox] = useState(0);
+    const itemsPerPage = 4;
+
+
+    useEffect(() => {
+        const fetchStamps = async () => {
+            const response = await getStamps()
+            console.log(response)
+            const urls = response.map((imgs) => {
+                const blob = new Blob([new Uint8Array(imgs.img.data), { type: 'image/jpeg' }]);
+                return URL.createObjectURL(blob);
+            })
+            setStamps(urls)
+        }
+
+        const fetchBox = async () => {
+            const response = await getAllBoxs();
+            const urls = response.map((imgs) => {
+                const blob = new Blob([new Uint8Array(imgs.img.data), { type: 'image/jpeg' }]);
+                return URL.createObjectURL(blob);
+            })
+            setBox(urls)
+        }
+        fetchBox()
+        fetchStamps()
+    }, [])
+
+    const imgs = [
+        { id: "1", src: "https://via.placeholder.com/65" },
+        { id: "2", src: "https://via.placeholder.com/65" },
+        { id: "3", src: "https://via.placeholder.com/65" },
+        { id: "4", src: "https://via.placeholder.com/65" },
+    ]
+
+
+
+    const handleSelectStamps = (e, type) => {
+        if(type === "selo"){
+            const newStamp = {
+                id: `${Date.now()}`,
+                image: new window.Image(),
+                width: 100,
+                height: 100,
+                x: 100,
+                y: 100,
+            };
+            newStamp.image.src = e.target.currentSrc;
+    
+            setStampsKonva((prev) => [...prev, newStamp]);
+        }else{
+            const newBox = {
+                id: `${Date.now()}`,
+                image: new window.Image(),
+                width: 100,
+                height: 100,
+                x: 100,
+                y: 100,
+            };
+            newBox.image.src = e.target.currentSrc;
+    
+            setBoxData((prev) => [...prev, newBox]);
+        }
+    };
+
+
+
+
+
+    const goPrev = (type) => {
+        type === "selo" ? setCurrentIndex((prev) => Math.max(prev - itemsPerPage, 0)):
+        setCurrentIndexBox((prev) => Math.max(prev - itemsPerPage, 0));
+    };
+
+    const goNext = (type) => {
+        type === "selo" ? setCurrentIndex((prev) =>
+            Math.min(prev + itemsPerPage, stamps.length - itemsPerPage)
+        ) :
+        setCurrentIndexBox((prev) =>
+            Math.min(prev + itemsPerPage, box.length - itemsPerPage)
+        );
+    };
+
+
+    return (
+        <div className="box-container">
+
+            <div className="box" >
+                <h3 style={{marginBottom: 0}}>Selos</h3>
+                <div style={{ display: 'flex', gap: '5px', width: '100%', height: '70%', alignItems: 'center', justifyContent: 'center', }}>
+                    <button onClick={() => goPrev("selo")} className="prev-button"><FontAwesomeIcon size='2x' icon={faCircleLeft} /></button>
+                    {stamps?.slice(currentIndex, currentIndex + itemsPerPage).map((img, index) => (
+                        <img
+                            key={index}
+                            style={{ width: '60px', height: '60px' }}
+                            src={img}
+                            alt="Imagem"
+                            className="box-image"
+                            onClick={(e) => handleSelectStamps(e, "selo")}
+                        />
+                    ))}
+
+                    <button onClick={()=>goNext("selo")} className="next-button"><FontAwesomeIcon size='2x' icon={faCircleRight} /></button>
+
+                </div>
+                <div style={{
+
+                    display: "flex",
+                    gap: '10px',
+                    width: "100%",
+                    height: "30%",
+                    // marginBottom: "30px",
+                    justifyContent: 'space-evenly',
+
+                }}>
+                    <Button style={{ width: '80px' }}>Ver+</Button>
+                    <p onClick={''} style={{ fontSize: '14px', cursor: 'pointer' }}>Ou clique aqui para carregar um selo</p>
+                </div>
+            </div>
+
+            <div className="box" >
+                <h3 style={{marginBottom: 0}}>Box</h3>
+                <div style={{ display: 'flex', gap: '5px', width: '100%', height: '70%', alignItems: 'center', justifyContent: 'center', }}>
+                    <button onClick={() => goPrev("box")} className="prev-button"><FontAwesomeIcon size='2x' icon={faCircleLeft} /></button>
+                    <div style={{
+                        display: "flex",
+                        gap: '10px',
+                        width: "100%",
+                        height: "70%",
+                        alignItems: 'center',
+                        justifyContent: 'center',
+
+                    }}>
+                        {box?.slice(currentIndexBox, currentIndexBox + itemsPerPage).map((img, index) => (
+                            <img
+                                key={index}
+                                style={{ width: '60px', height: '60px' }}
+                                src={img}
+                                alt="Imagem"
+                                className="box-image"
+                                onClick={(e) => handleSelectStamps(e, "box")}
+                            />
+                        ))}
+                    </div>
+
+                    <button onClick={()=> goNext("box")} className="next-button"><FontAwesomeIcon size='2x' icon={faCircleRight} /></button>
+
+                </div>
+                <div style={{
+
+                    display: "flex",
+                    gap: '10px',
+                    width: "100%",
+                    height: "30%",
+                    // marginBottom: "30px",
+                    justifyContent: 'space-evenly',
+
+                }}>
+                    <Button style={{ width: '80px' }}>Ver+</Button>
+                    <p onClick={''} style={{ fontSize: '14px', cursor: 'pointer' }}>Ou clique aqui para carregar um box</p>
+                </div>
+            </div>
+        </div>
+    )
+}
