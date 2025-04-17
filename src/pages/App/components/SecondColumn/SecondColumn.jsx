@@ -1,13 +1,17 @@
 import { EditTools } from './components/EditTools/EditTools';
 import { BoxDecoration } from './components/ExempleAndBox/BoxDecoration';
 import { Button } from '../../../../components/button/button';
-import { Konva } from './components/Konva/Konva';
 import './index.css'
 import ExempleImage from './ExempleImages/ExempleImage';
 import { StampsProvider } from '../../../../contexts/StampsContext';
-const SecondColumn = ({ setStageQuantity, stageQuantity, handleTransformEndAndSaveToHistory, saveToHistory, handleTransform, groupRef, groupActive, handleTransformGroup, groupRefs, selectedElements, handleDeselect, shapesRefs, setBorderRadius, borderRadius, handleBorderRadius, optionsBorderRadius, modalBorderRadius, adress, user, blobImg, setTexts, optionsOutlineSize, openModalDates, modalOfDates, formatedDateFinal, selectedDateFinal, setDateFinal, dateFinal, formatedDateInitial, selectedDateInitial, dateInitial, setDateInitial, handleValidate, isValidate, circleGradientType, alterDirectionGradienta, enablePickerEndColor, enablePickerStartColor, enableColorPickerSolid, handleAdressButton, alterShapeForGradientType, handleGradientColorChange, setSolidColor, solidColor, setIsGradient, isGradient, setStartColor, startColor, setEndColor, endColor, onModalColor, modalColor, handleShadowShape, handleOutlineSize, handleOutlineColorChange, exportImage, handleSelectFontSize, optionsFontSize, inputPosition, saveTextChange, handleTextChange, editingTextIndex, tempTextValue, enableTextEditing, texts, addTextBox, selectedText, handleSelectText, textRef, imageRef, products, copies, guides, transformerRef, handleDragEnd, handleDragMove, handleSelect, setShapes, shapes, handleMouseLeave, handleMouseEnter, desabilitarBackground, backgroundImage, setSelectedText, setSelectedShape, selectedTabloid, stageRef, history, handleNext, currentHistoryIndex, handlePrev, isBold, toggleBold, addShape, selectedShape, duplicateShape, handleColorChange, handleSelectFont, optionsFont }) => {
+import { StageContent } from './components/Konva/StageContent';
+import ShortcutInformations from './components/ShortCutsInformations/ShortcutInformations';
+const SecondColumn = ({nextStage, prevStage, stageId, addNewStage, setStageQuantity, stageQuantity, handleTransformEndAndSaveToHistory, saveToHistory, handleTransform, groupRef, groupActive, handleTransformGroup, groupRefs, selectedElements, handleDeselect, shapesRefs, setBorderRadius, borderRadius, handleBorderRadius, optionsBorderRadius, modalBorderRadius, adress, user, blobImg, setTexts, optionsOutlineSize, openModalDates, modalOfDates, formatedDateFinal, selectedDateFinal, setDateFinal, dateFinal, formatedDateInitial, selectedDateInitial, dateInitial, setDateInitial, handleValidate, isValidate, circleGradientType, alterDirectionGradienta, enablePickerEndColor, enablePickerStartColor, enableColorPickerSolid, handleAdressButton, alterShapeForGradientType, handleGradientColorChange, setSolidColor, solidColor, setIsGradient, isGradient, setStartColor, startColor, setEndColor, endColor, onModalColor, modalColor, handleShadowShape, handleOutlineSize, handleOutlineColorChange, exportImage, handleSelectFontSize, optionsFontSize, inputPosition, saveTextChange, handleTextChange, editingTextIndex, tempTextValue, enableTextEditing, texts, addTextBox, selectedText, handleSelectText, textRef, imageRef, products, copies, guides, transformerRef, handleDragEnd, handleDragMove, handleSelect, setShapes, shapes, handleMouseLeave, handleMouseEnter, desabilitarBackground, backgroundImage, setSelectedText, setSelectedShape, selectedTabloid, stageRef, history, handleNext, currentHistoryIndex, handlePrev, isBold, toggleBold, addShape, selectedShape, duplicateShape, handleColorChange, handleSelectFont, optionsFont }) => {
     return (
         <main className="secondColumnApp">
+            <ShortcutInformations>
+
+            </ShortcutInformations>
             <EditTools
                 optionsFont={optionsFont}
                 optionsOutlineSize={optionsOutlineSize}
@@ -64,8 +68,7 @@ const SecondColumn = ({ setStageQuantity, stageQuantity, handleTransformEndAndSa
                 user={user}
             />
 
-
-            <Konva
+            <StageContent
                 setStageQuantity={setStageQuantity}
                 stageQuantity={stageQuantity}
                 handleTransformEndAndSaveToHistory={handleTransformEndAndSaveToHistory}
@@ -118,11 +121,15 @@ const SecondColumn = ({ setStageQuantity, stageQuantity, handleTransformEndAndSa
                 setTexts={setTexts}
                 user={user}
                 adress={adress}
+                addNewStage={addNewStage}
+                stageId={stageId}
+                prevStage={prevStage}
+                nextStage={nextStage}
             />
 
-            <ExempleImage blobImg={blobImg} />
+            {/* <ExempleImage blobImg={blobImg} /> */}
 
-            {/* <BoxDecoration /> */}
+            <BoxDecoration />
 
 
             <Button style={{ width: '30%' }} onClick={exportImage}>

@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleLeft, faCircleRight } from '@fortawesome/free-regular-svg-icons'
 import { useEffect, useState } from 'react'
 import { getStamps } from '../../../../../../services/StampsAndBox/Stamps'
-import { Konva } from '../Konva/Konva'
 import { useStamps } from '../../../../../../contexts/StampsContext';
 import { getAllBoxs } from '../../../../../../services/StampsAndBox/Box'
 import { useBox } from '../../../../../../contexts/BoxContext'
@@ -22,7 +21,6 @@ export const BoxDecoration = () => {
     useEffect(() => {
         const fetchStamps = async () => {
             const response = await getStamps()
-            console.log(response)
             const urls = response.map((imgs) => {
                 const blob = new Blob([new Uint8Array(imgs.img.data), { type: 'image/jpeg' }]);
                 return URL.createObjectURL(blob);

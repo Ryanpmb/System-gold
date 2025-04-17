@@ -5,8 +5,8 @@ import { api } from "../api";
 export const FindProduct = async (value)=>{
     try {
 
-        const response = await api.post('/getProduct', { product: value });
-        console.log(response)
+        const response = await api.post('/getProduct', { productName: value });
+
         return response.data
         
     } catch (error) {
@@ -19,8 +19,6 @@ export const FindProduct = async (value)=>{
 
 export const registerNewProduct = async (values) =>{
     try {
-
-        console.log(values.get("name"))
 
         const response = await api.post('/registerNewProduct', values);
         return response.data

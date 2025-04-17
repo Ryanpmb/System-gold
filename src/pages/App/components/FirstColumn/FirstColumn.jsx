@@ -82,8 +82,6 @@ const FirstColumn = ({
     const handleImageUpload = async (e, type) => {
         const file = e.target.files[0];
         if (!file) return;
-        console.log(type)
-        console.log(e)
 
         setLoading(true);
 
@@ -108,7 +106,7 @@ const FirstColumn = ({
             } else if (type === "productImage") {
                 const imageObjectUrl = URL.createObjectURL(response.data);
 
-                console.log(typeof imageObjectUrl)
+
                 setProductImage(null)
                 setCropperProductImage(imageObjectUrl);
             }
@@ -126,7 +124,9 @@ const FirstColumn = ({
                 const cropper = cropperRef.current.cropper;
                 const croppedCanvas = cropper.getCroppedCanvas();
                 const croppedImageUrl = croppedCanvas.toDataURL();
+
                 setLogo(croppedImageUrl);
+
                 setImage(null);
             } else if ("productImage") {
                 const cropper = cropperRef.current.cropper;
@@ -146,7 +146,6 @@ const FirstColumn = ({
                 
 
                 const productResizedUrl = productImageResized.toDataURL();
-                console.log("ta caindo aqui!")
                 setProductImage(productResizedUrl)
                 setCropperProductImage(null)
             }
@@ -245,7 +244,7 @@ const FirstColumn = ({
                                                 zoomable={true}
                                                 dragMode="move"
                                             />
-                                            <button type="button" onClick={handleCrop("logoClubeImage")} style={{ marginTop: "10px" }}>
+                                            <button type="button" onClick={() => handleCrop("logoClubeImage")} style={{ marginTop: "10px" }}>
                                                 Cortar Imagem
                                             </button>
                                         </div>
@@ -325,7 +324,7 @@ const FirstColumn = ({
                             <Select
                                 FirstOption={"Escolha seu Formato"}
                                 options={SelectTabloid}
-                                onChange={(e) => { console.log(e.target.value); setSelectedTabloid(JSON.parse(e.target.value)); }}
+                                onChange={(e) => {setSelectedTabloid(JSON.parse(e.target.value)); }}
 
                                 name="selectTabloid"
                             />

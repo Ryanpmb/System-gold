@@ -32,12 +32,11 @@ const Login = () =>{
     const login = async (values) =>{
         try {
             const response = await loginUser(values)
-   
 
             if(response.access_token){
                 localStorage.setItem('authToken', response.access_token)
                 localStorage.setItem("userId", response.userData.id)
-                console.log(response)
+
 
                 navigate(`/HomePage/${response.userData.id}`)
 

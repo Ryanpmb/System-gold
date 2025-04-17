@@ -14,7 +14,6 @@ const HomePage = () => {
     useEffect(() => {
         const getUserInformation = async () => {
             const response = await GetUser(id)
-            console.log(response)
             setUser(response)
         }
 

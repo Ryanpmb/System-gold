@@ -19,8 +19,7 @@ const Register = () =>{
 
         try {
             const response = await CreateUser(values);
-            console.log(response)
-            
+ 
             if(response.data.access_token){
                 localStorage.setItem('authToken', response.data.access_token)
                 localStorage.setItem("userId", response.data.userData.id)

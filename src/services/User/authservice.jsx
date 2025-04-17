@@ -3,7 +3,6 @@ import { api } from "../api"
 
 const loginUser = async (values) =>{
     try {
-        console.log(values)
         const response = await api.post('/UserLogin', values)
         return response.data
     } catch (error) {

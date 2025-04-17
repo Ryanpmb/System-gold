@@ -16,13 +16,13 @@ import { UserContext } from "../../contexts/UserContext";
 
 
 const Aplication = () => {
-
     const { stampsKonva, setStampsKonva } = useStamps();
     const { boxData, setBoxData } = useBox()
 
     const { id } = useParams()
 
-    const [stageQuantity, setStageQuantity] = useState([{id: 1,  elements:[]}])
+    const [stageQuantity, setStageQuantity] = useState([{ id: 1, products: [], copies: [], texts: [], shapes: [], boxData: [], stampsKonva: [], hasValidateDate: false, formatedDateInitial: '', formatedDateFinal: '', history: [] }])
+
 
 
     const [quantityProduct, setQuantityProduct] = useState(0)
@@ -103,7 +103,98 @@ const Aplication = () => {
 
     const [modalRegisterProduct, setModalRegisterProduct] = useState(false)
 
+    const [stageId, setStageId] = useState(1)
 
+
+    useEffect(() => {
+        setStageQuantity((prevStage) => {
+            return prevStage.map((stage) => {
+                if (stage?.id === stageId) {
+                    return {
+                        ...stage,
+                        products: products,
+                        copies: copies,
+                        texts: texts,
+                        shapes: shapes,
+                        boxData: boxData,
+                        stampsKonva: stampsKonva,
+                        hasValidateDate: isValidate,
+                        formatedDateInitial: formatedDateInitial,
+                        formatedDateFinal: formatedDateFinal,
+                        history: history
+                    }
+                }
+
+                return stage
+            })
+        })
+
+    }, [products, copies, texts, shapes, boxData, stampsKonva, isValidate, formatedDateInitial, formatedDateFinal, history])
+
+    const addNewStage = () => {
+        setStageQuantity((prevStages) => {
+            const newStage = {
+                id: prevStages.length + 1, // Agora pega o tamanho atualizado
+                products: [],
+                copies: [],
+                texts: [],
+                shapes: [],
+                boxData: [],
+                stampsKonva: [],
+                hasValidateDate: false,
+                formatedDateInitial: '',
+                formatedDateFinal: '',
+            };
+            return [...prevStages, newStage];
+        });
+        setStageId(stageQuantity.length + 1)
+        setProducts([])
+        setCopies([])
+        setShapes([])
+        setTexts([])
+        setBoxData([])
+        setStampsKonva([])
+        setIsValidate(false)
+        setFormatedDateInitial('')
+        setFormatedDateFinal('')
+        setHistory([])
+    }
+
+    const prevStage = () => {
+        const currentStageId = stageId === 1 ? 1 : stageId - 1
+        const currentStage = stageQuantity.find((stage) => stage.id === currentStageId)
+        setStageId(currentStageId)
+        setProducts(currentStage.products)
+        setCopies(currentStage.copies)
+        setShapes(currentStage.shapes)
+        setTexts(currentStage.texts)
+        setBoxData(currentStage.boxData)
+        setStampsKonva(currentStage.stampsKonva)
+        setIsValidate(currentStage.hasValidateDate)
+        setFormatedDateInitial(currentStage.formatedDateInitial)
+        setFormatedDateFinal(currentStage.formatedDateFinal)
+        setHistory(currentStage.history)
+
+    }
+
+    const nextStage = () => {
+        const currentStageId = stageId === stageQuantity.length ? stageQuantity.length : stageId + 1
+        const currentStage = stageQuantity.find((stage) => stage.id === currentStageId)
+        setStageId(currentStageId)
+        setProducts(currentStage.products)
+        setCopies(currentStage.copies)
+        setShapes(currentStage.shapes)
+        setTexts(currentStage.texts)
+        setBoxData(currentStage.boxData)
+        setStampsKonva(currentStage.stampsKonva)
+        setIsValidate(currentStage.hasValidateDate)
+        setFormatedDateInitial(currentStage.formatedDateInitial)
+        setFormatedDateFinal(currentStage.formatedDateFinal)
+        setHistory(currentStage.history)
+    }
+
+    useEffect(() => {
+    }, [stageQuantity])
 
 
 
@@ -126,7 +217,6 @@ const Aplication = () => {
                 Telefone: values[`Telefone-${i}`],
                 Whatsapp: values[`Whatsapp-${i}`],
                 horaFuncionamento: values[`horaFuncionamento-${i}`],
-
             });
         }
         const response = await updateUserInformations({ Logo, addresses, id })
@@ -353,11 +443,13 @@ const Aplication = () => {
     };
 
     const handleSelectFont = (selectedFont) => {
+
         setSelectedOptionFont(selectedFont);
         if (selectedShape.attrs.text) {
             selectedShape.fontFamily(selectedFont);
             selectedShape.getLayer().batchDraw();
         }
+
     };
 
     const handleOutlineSize = (selectedSize) => {
@@ -608,7 +700,7 @@ const Aplication = () => {
             setCopies(copies);
             setTexts(texts); // Restaura texts do histórico
             setCurrentHistoryIndex(nextIndex);
-           
+
         }
     };
 
@@ -793,7 +885,6 @@ const Aplication = () => {
     const handleDeleteSelectedItem = () => {
         if (selectedShape) {
             const idToRemove = selectedShape.id();
-            console.log(selectedShape)
 
             const newProducts = products.filter((product) => product.id !== idToRemove)
             setProducts(newProducts)
@@ -839,18 +930,23 @@ const Aplication = () => {
                 handleDeleteSelectedItem();
             }
 
-            if(e.ctrlKey && e.key === "z") {
+            if (e.ctrlKey && e.key === "z") {
                 e.preventDefault();
                 handlePrev();
             }
 
-            if(e.ctrlKey && e.key === "y") {
+            if (e.ctrlKey && e.key === "y") {
                 e.preventDefault();
                 handleNext();
             }
+
+            if(e.ctrlKey && e.key === "v") {
+                e.preventDefault();
+                duplicateShape();
+            }
         };
 
-        
+
 
         window.addEventListener("keydown", handleKeyDown);
 
@@ -935,14 +1031,6 @@ const Aplication = () => {
                 y: Math.random() * 200,
                 width: 100,
                 height: 100,
-                pricePosition: {
-                    x: 130,
-                    y: 100,
-                },
-                textPosition: {
-                    x: 130,
-                    y: 80,
-                },
                 data: svgPathData,
                 fill: 'red', // Cor do interior do caminho
                 isGradient: false,
@@ -1083,7 +1171,6 @@ const Aplication = () => {
 
 
         } else {
-            console.log(e.target)
             setSelectedElements([])
             setGroupActive(false)
             setSelectedShape(e.target)
@@ -1092,7 +1179,6 @@ const Aplication = () => {
             setIsGradient(e.target.isGradient)
             setBorderRadius(e.target.attrs.cornerRadius)
             setSelectedOptionFont(e.target.attrs.font)
-            console.log(products)
 
 
 
@@ -1228,10 +1314,12 @@ const Aplication = () => {
     };
 
     const handleTransformEndAndSaveToHistory = (type) => {
+        console.log('aqui')
         const transformHandlers = {
             shape: () => {
                 const newShapes = shapes.map((shape) => {
                     if (shape.id === selectedShape.attrs.id) {
+
                         return {
                             ...shape,
                             scaleX: selectedShape.attrs.scaleX,
@@ -1522,7 +1610,10 @@ const Aplication = () => {
 
                     blobImg={blobImg}
 
-
+                    addNewStage={addNewStage}
+                    stageId={stageId}
+                    prevStage={prevStage}
+                    nextStage={nextStage}
 
                     exportImage={exportImage}
                 />
