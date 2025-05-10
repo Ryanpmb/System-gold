@@ -105,6 +105,7 @@ const Aplication = () => {
 
     const [stageId, setStageId] = useState(1)
 
+    const [groups, setGroups] = useState([]);
 
     useEffect(() => {
         setStageQuantity((prevStage) => {
@@ -1155,6 +1156,8 @@ const Aplication = () => {
         }
 
     };
+
+    
 
 
 

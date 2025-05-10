@@ -127,7 +127,7 @@ const SecondColumn = ({nextStage, prevStage, stageId, addNewStage, setStageQuant
                 nextStage={nextStage}
             />
 
-            {/* <ExempleImage blobImg={blobImg} /> */}
+            <ExempleImage blobImg={blobImg} />
 
             <BoxDecoration />
 
